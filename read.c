@@ -2,6 +2,8 @@
 #include <ctype.h>
 
 static char *skip_ws(char *s);
+static mel_value* mel_read_sym(char *s, char **r);
+
 
 mel_value* mel_read(char *s) {
   if( ! s ) { return 0; } 
@@ -39,6 +41,8 @@ static char *skip_ws(char *s) {
 }
 
 
+static mel_value* mel_read_sym(char *s, char **r) {
+}
 
 
 

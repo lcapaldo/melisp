@@ -4,12 +4,13 @@ enum mel_types { mel_str, mel_int, mel_flo, mel_pair, mel_fun, mel_sym };
 
 struct mel_str {
   int len;
+  int capa;
   char* val;
 };
 
 struct mel_sym {
   int len;
-  char *val; // yeah its the same as a string for now
+  char *val; 
 };
 
 struct mel_int {
