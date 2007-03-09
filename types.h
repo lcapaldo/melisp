@@ -11,6 +11,11 @@ struct mel_int {
 struct mel_flo {
   double val;
 };
+
+struct mel_char {
+  char val;
+};
+
 struct mel_value;
 
 struct mel_pair {
@@ -27,6 +32,7 @@ struct mel_value {
     struct mel_str str_val;
     struct mel_sym sym_val;
     struct mel_int int_val;
+    struct mel_char char_val;
     struct mel_flo flo_val;
     struct mel_pair pair_val;
   } value;

@@ -49,6 +49,13 @@ struct mel_value* mel_alloc_int(struct mel_pool* p, int v) {
   return r;
 }
 
+struct mel_value* mel_alloc_char(struct mel_pool* p, char v) {
+  struct mel_value* r;
+  r = mel_alloc_value(p);
+  r->mel_type = mel_char;
+  r->value.char_val = v;
+  return r;
+}
 struct mel_value* mel_alloc_float(struct mel_pool* p, double v) {
   struct mel_value* r;
   r = mel_alloc_value(p);
@@ -57,3 +64,26 @@ struct mel_value* mel_alloc_float(struct mel_pool* p, double v) {
   return r;
 }
 
+struct mel_value* mel_create_string(struct mel_pool* p, char* s) {
+  struct mel_value* r;
+  if( s == '\0' ) {
+    r = mel_cons(p, 0, 0);
+    r->mel_type = mel_str;
+  } else {
+    r = mel_create_string1(p, s);
+  }
+
+  return r;
+}
+
+struct mel_value* mel_create_string1(struct mel_pool* p, char* s) {
+  if ( s == '\0' ) {
+    return 0;
+  } else {
+    struct mel_value* cons;
+    cons = mel_cons(mel_alloc_char(p, *s), mel_create_string1(p, s + 1));
+    cons->mel_type = mel_str;
+    return cons;
+  }
+}
+     
