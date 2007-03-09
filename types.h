@@ -1,17 +1,8 @@
 #ifndef MEL_TYPES_H
 #define MEL_TYPES_H
-enum mel_types { mel_str, mel_int, mel_flo, mel_pair, mel_fun, mel_sym };
+enum mel_types { mel_str, mel_int, mel_flo, mel_pair, mel_fun, mel_sym, mel_char };
 
-struct mel_str {
-  int len;
-  int capa;
-  char* val;
-};
 
-struct mel_sym {
-  int len;
-  char *val; 
-};
 
 struct mel_int {
   int val;
