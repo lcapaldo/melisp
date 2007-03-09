@@ -1,5 +1,5 @@
 #include "read.h"
-#include <ctypes.h>
+#include <ctype.h>
 
 static char *skip_ws(char *s);
 
