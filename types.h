@@ -1,6 +1,6 @@
 #ifndef MEL_TYPES_H
 #define MEL_TYPES_H
-enum mel_types { mel_str, mel_int, mel_flo, mel_pair, mel_fun, mel_sym, mel_char };
+enum { mel_strt, mel_intt, mel_flot, mel_pairt, mel_funt, mel_symt, mel_chart };
 
 
 
@@ -29,8 +29,6 @@ struct mel_fun {
 struct mel_value {
   int mel_type;
   union {
-    struct mel_str str_val;
-    struct mel_sym sym_val;
     struct mel_int int_val;
     struct mel_char char_val;
     struct mel_flo flo_val;

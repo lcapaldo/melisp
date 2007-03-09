@@ -1,5 +1,5 @@
 #include "memory.h"
-int mel_init_pool( struct pool* pool, int count ) { 
+int mel_init_pool( struct mel_pool* pool, int count ) { 
   void* buf = 0;
   if ( ! ( buf = malloc( sizeof(struct mel_value) * count ) ) ) {
     return -1;
@@ -35,7 +35,7 @@ struct mel_value* mel_alloc_value( struct mel_pool* pool ) {
 struct mel_value* mel_cons(struct mel_pool* pool, struct mel_value* first, struct mel_value* second) {
   struct mel_value* cons_cell;
   cons_cell = mel_alloc_value(pool);
-  cons_cell->mel_type = mel_pair;
+  cons_cell->mel_type = mel_pairt;
   cons_cell->value.pair_val.fst = first;
   cons_cell->value.pair_val.snd = second;
   return cons_cell;
@@ -44,31 +44,32 @@ struct mel_value* mel_cons(struct mel_pool* pool, struct mel_value* first, struc
 struct mel_value* mel_alloc_int(struct mel_pool* p, int v) {
   struct mel_value* r;
   r = mel_alloc_value(p);
-  r->mel_type = mel_int;
-  r->value.int_val = v;
+  r->mel_type = mel_intt;
+  r->value.int_val.val = v;
   return r;
 }
 
 struct mel_value* mel_alloc_char(struct mel_pool* p, char v) {
   struct mel_value* r;
   r = mel_alloc_value(p);
-  r->mel_type = mel_char;
-  r->value.char_val = v;
+  r->mel_type = mel_chart;
+  r->value.char_val.val = v;
   return r;
 }
 struct mel_value* mel_alloc_float(struct mel_pool* p, double v) {
   struct mel_value* r;
   r = mel_alloc_value(p);
-  r->mel_type = mel_flo;
-  r->value.flo_val = v;
+  r->mel_type = mel_flot;
+  r->value.flo_val.val = v;
   return r;
 }
 
+struct mel_value* mel_create_string1(struct mel_pool* p, char* s); // internal
 struct mel_value* mel_create_string(struct mel_pool* p, char* s) {
   struct mel_value* r;
   if( s == '\0' ) {
     r = mel_cons(p, 0, 0);
-    r->mel_type = mel_str;
+    r->mel_type = mel_strt;
   } else {
     r = mel_create_string1(p, s);
   }
@@ -81,8 +82,8 @@ struct mel_value* mel_create_string1(struct mel_pool* p, char* s) {
     return 0;
   } else {
     struct mel_value* cons;
-    cons = mel_cons(mel_alloc_char(p, *s), mel_create_string1(p, s + 1));
-    cons->mel_type = mel_str;
+    cons = mel_cons(p, mel_alloc_char(p, *s), mel_create_string1(p, s + 1));
+    cons->mel_type = mel_strt;
     return cons;
   }
 }
