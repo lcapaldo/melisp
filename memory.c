@@ -67,7 +67,7 @@ struct mel_value* mel_alloc_float(struct mel_pool* p, double v) {
 struct mel_value* mel_create_string1(struct mel_pool* p, char* s); // internal
 struct mel_value* mel_create_string(struct mel_pool* p, char* s) {
   struct mel_value* r;
-  if( s == '\0' ) {
+  if( *s == '\0' ) {
     r = mel_cons(p, 0, 0);
     r->mel_type = mel_strt;
   } else {
@@ -78,7 +78,7 @@ struct mel_value* mel_create_string(struct mel_pool* p, char* s) {
 }
 
 struct mel_value* mel_create_string1(struct mel_pool* p, char* s) {
-  if ( s == '\0' ) {
+  if ( *s == '\0' ) {
     return 0;
   } else {
     struct mel_value* cons;

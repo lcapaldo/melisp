@@ -1,3 +1,5 @@
-~$
-\.o$
-^test_string$
+syntax: glob
+*~
+*.o
+test_string
+.gdb_history
