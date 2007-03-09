@@ -14,7 +14,7 @@ static char *skip_ws(char *s) {
     return rv;
   }
   
-  while( isspace( *rv ) ) {
+  while( rv && isspace( *rv ) ) {
     rv++;
   }
 
