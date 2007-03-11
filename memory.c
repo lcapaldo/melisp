@@ -1,5 +1,4 @@
 #include "memory.h"
-#include <stdio.h>
 
 int mel_init_pool( struct mel_pool* pool, int count ) { 
   void* buf = 0;
