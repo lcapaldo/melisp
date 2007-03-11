@@ -4,6 +4,7 @@
 #include "list.h"
 #include "types.h"
 #include "read.h"
+#include <stdio.h>
 static struct mel_value* eval_special_form(struct mel_pool* p, struct mel_value* expr, struct mel_value* env);
 static struct mel_value* eval_function_call(struct mel_pool* p, struct mel_value* expr, struct mel_value* env);
 static int is_special_form(struct mel_pool* p, struct mel_value* expr );
@@ -51,6 +52,10 @@ static struct mel_value* eval_function_call(struct mel_pool* p, struct mel_value
   struct mel_value* fname = mel_car( expr );
   struct mel_value* arg_list = eval_arg_list(p,  mel_cdr( expr ), env );
   struct mel_value* f = mel_lookup(p, fname, env);
+  if( f == 0 ) {
+    printf("Think you're clever?\n");
+    return 0;
+  }
   if( f->mel_type == mel_cfunt ) {
     return f->value.cfun_val.cfun(p, arg_list);
   }

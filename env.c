@@ -6,6 +6,7 @@ static struct mel_value* lookup_r(struct mel_pool* p, struct mel_value* name, st
 static struct mel_value* add( struct mel_pool* p, struct mel_value* args);
 static struct mel_value* cons(struct mel_pool* p, struct mel_value* args);
 static struct mel_value* car(struct mel_pool* p, struct mel_value* args);
+static struct mel_value* cdr(struct mel_pool* p, struct mel_value* args);
 struct mel_value* mel_lookup(struct mel_pool* p, struct mel_value* name, struct mel_value* env) {
   return lookup_r(p, name, mel_car( env ));
 }
@@ -35,6 +36,7 @@ struct mel_value* mel_standard_env(struct mel_pool* p) {
   mel_set_global(p, mel_cdr(mel_read(p, "nil")), 0, env);
   mel_set_global(p, mel_cdr(mel_read(p, "cons")), mel_alloc_cfun(p, cons), env);
   mel_set_global(p, mel_cdr(mel_read(p, "car")), mel_alloc_cfun(p, car), env);
+  mel_set_global(p, mel_cdr(mel_read(p, "cdr")), mel_alloc_cfun(p, cdr), env);
 
   return env; 
 }
@@ -72,5 +74,10 @@ static struct mel_value* cons(struct mel_pool* p, struct mel_value* args) {
 
 static struct mel_value* car(struct mel_pool* p, struct mel_value* args) {
   return mel_car( mel_car( args ) );
+}
+
+
+static struct mel_value* cdr(struct mel_pool* p, struct mel_value* args) {
+  return mel_cdr( mel_car( args ) );
 }
 
