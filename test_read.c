@@ -13,6 +13,8 @@ int main() {
   printf("%d = 0\n", s->value.pair_val.fst->value.int_val.val);
   printf("%d = 1\n", s->value.pair_val.snd->value.pair_val.fst->value.int_val.val);
   mel_print( s );
+  s = mel_read( &p, "anc");
+  mel_print( s );
   printf("\n"); 
   return 0;
 } 

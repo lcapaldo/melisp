@@ -3,9 +3,12 @@ static void print_int( struct mel_value* value );
 static void print_dotted_pair( struct mel_value* value );
 static void print_pair( struct mel_value* value );
 static void print_list( struct mel_value* value );
+static void print_sym( struct mel_value* value );
+static void print_float( struct mel_value* value );
 void mel_print( struct mel_value* value ) {
   if( value == 0 ) {
     printf("nil");
+    return;
   }
 
   switch( value->mel_type ) {
@@ -14,6 +17,12 @@ void mel_print( struct mel_value* value ) {
       break;
     case mel_intt:
       print_int( value );
+      break;
+    case mel_flot:
+      print_float( value );
+      break;
+    case mel_symt:
+      print_sym( value );
       break;
     default:
       break;
@@ -53,5 +62,17 @@ static void print_dotted_pair( struct mel_value* value ) {
   printf(" . ");
   mel_print( value->value.pair_val.snd );
   printf(")");
+}
+
+static void print_sym( struct mel_value* value ) {
+  struct mel_value* cursor = value;
+  while( cursor != 0 ) {
+    printf("%c", cursor->value.pair_val.fst->value.char_val.val);
+    cursor = cursor->value.pair_val.snd;
+  }
+}
+
+static void print_float( struct mel_value* value ) {
+  printf("%f", value->value.flo_val.val);
 }
 
