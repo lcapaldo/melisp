@@ -1,6 +1,6 @@
 #ifndef MEL_TYPES_H
 #define MEL_TYPES_H
-enum { mel_strt, mel_intt, mel_flot, mel_pairt, mel_funt, mel_symt, mel_chart };
+enum { mel_strt, mel_intt, mel_flot, mel_pairt, mel_funt, mel_symt, mel_chart, mel_envt };
 
 
 
