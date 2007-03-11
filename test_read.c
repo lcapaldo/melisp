@@ -2,6 +2,7 @@
 #include "memory.h"
 #include "types.h"
 #include "print.h"
+#include "read.h"
 int main() {
   struct mel_value* s;
   struct mel_pool p;

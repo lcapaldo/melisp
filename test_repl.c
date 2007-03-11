@@ -2,6 +2,7 @@
 #include "memory.h"
 #include "types.h"
 #include "print.h"
+#include "read.h"
 int main() {
   struct mel_value* s;
   struct mel_pool p;
@@ -13,6 +14,9 @@ int main() {
   printf("> ");
   while( fgets( input, 1024, stdin ) ) {
     s = mel_read( &p, input );
+    if( s->value.pair_val.fst->value.int_val.val != mel_noerr ) {
+      printf("parse error\n");
+    }
     mel_print( s->value.pair_val.snd );
     printf("\n> ");
   }

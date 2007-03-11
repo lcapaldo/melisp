@@ -2,7 +2,6 @@
 #include "memory.h"
 #include "types.h"
 #include <ctype.h>
-enum { mel_noerr, mel_eof, mel_err };
 static void skip_ws(char **s);
 static struct mel_value* read_number(struct mel_pool* p, char **s, int* success);
 static struct mel_value* read_expr(struct mel_pool* p, char **s, int* success);
@@ -80,6 +79,7 @@ static struct mel_value* read_listing(struct mel_pool* p, char **s, int* success
     return 0;
   }
   if ( **s == ')' ) {
+    *s = *s + 1;
     return 0;
   }
 

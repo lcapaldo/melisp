@@ -16,4 +16,5 @@ struct mel_value* mel_cons(struct mel_pool* pool, struct mel_value* first, struc
 struct mel_value* mel_alloc_int(struct mel_pool* p, int v);
 struct mel_value* mel_alloc_float(struct mel_pool* p, double v);
 struct mel_value* mel_create_string(struct mel_pool* p, char* s);
+struct mel_value* mel_alloc_char(struct mel_pool* p, char v);
 #endif
