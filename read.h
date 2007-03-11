@@ -1,5 +1,6 @@
 #ifndef MEL_READ_H
 #define MEL_READ_H
 #include "types.h"
-mel_value* mel_read(char* s);
+#include "memory.h"
+struct mel_value* mel_read(struct mel_pool* p, char* s);
 #endif

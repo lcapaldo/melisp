@@ -3,3 +3,4 @@ syntax: glob
 *.o
 test_string
 .gdb_history
+test_read
