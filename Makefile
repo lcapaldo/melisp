@@ -3,12 +3,12 @@ CFLAGS = -Wall -g
 LIBS = 
 
 
-all: test_string test_read test_repl
+all: test_repl
 
 test_string: test_string.o memory.o
 	$(CC) $(CFLAGS) test_string.o memory.o -o test_string
-test_read: test_read.o memory.o read.o print.o
-	$(CC) $(CFLAGS) test_read.o read.o memory.o print.o -o test_read
+test_read: test_read.o memory.o read.o list.o print.o
+	$(CC) $(CFLAGS) test_read.o read.o list.o memory.o print.o -o test_read
 test_read.o: test_read.c memory.h types.h print.h
 	$(CC) $(CFLAGS) -c test_read.c -o test_read.o
 test_repl: test_repl.o memory.o read.o print.o eval.o symbols.o env.o list.o
@@ -31,3 +31,4 @@ env.o: env.c env.h memory.h types.h
 	$(CC) $(CFLAGS) -c env.c -o env.o
 list.o: list.c list.h memory.h types.h
 	$(CC) $(CFLAGS) -c list.c -o list.o
+# DO NOT DELETE

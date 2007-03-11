@@ -2,6 +2,7 @@
 #include "memory.h"
 #include "types.h"
 #include <ctype.h>
+#include "list.h"
 static void skip_ws(char **s);
 static struct mel_value* read_number(struct mel_pool* p, char **s, int* success);
 static struct mel_value* read_expr(struct mel_pool* p, char **s, int* success);
@@ -10,6 +11,7 @@ static struct mel_value* read_sym(struct mel_pool* p, char **s, int* success);
 static struct mel_value* read_list(struct mel_pool* p, char **s, int* success);
 static struct mel_value* read_listing(struct mel_pool* p, char **s, int* success );
 static struct mel_value* read_inner_string(struct mel_pool* p, char **s, int* success);
+static struct mel_value* read_quote(struct mel_pool* p, char **s, int* success);
 
 
 struct mel_value* mel_read(struct mel_pool* p, char *s) {
@@ -40,6 +42,9 @@ struct mel_value* read_expr(struct mel_pool* p, char **s, int* success) {
       break;
     case '"':
       return read_string(p, s, success );
+      break;
+    case '\'':
+      return read_quote(p, s, success );
       break;
     default:
       return read_sym(p, s, success );
@@ -95,7 +100,7 @@ static struct mel_value* read_number(struct mel_pool* p, char **s, int* success)
   int v = 0;
   if ( **s == '\0' || !isdigit( **s )) {
     *success = mel_err;
-    return;
+    return 0;
   }
   while( isdigit( **s ) ) {
     v = v * 10 + (**s - '0');
@@ -162,5 +167,13 @@ static struct mel_value* read_sym(struct mel_pool* p, char **s, int* success)
   } else {
     return 0;
   }
+}
+
+static struct mel_value* read_quote(struct mel_pool* p, char **s, int* success) {
+  *s = *s + 1;
+  struct mel_value* expr;
+  skip_ws( s );
+  expr = read_expr(p, s, success);
+  return mel_cons(p, mel_cdr( mel_read(p, "quote") ), mel_cons(p, expr, 0));
 }
 
