@@ -17,4 +17,5 @@ struct mel_value* mel_alloc_int(struct mel_pool* p, int v);
 struct mel_value* mel_alloc_float(struct mel_pool* p, double v);
 struct mel_value* mel_create_string(struct mel_pool* p, char* s);
 struct mel_value* mel_alloc_char(struct mel_pool* p, char v);
+struct mel_value* mel_alloc_cfun(struct mel_pool* p, struct mel_value* (*f)(struct mel_pool* p, struct mel_value* args));
 #endif

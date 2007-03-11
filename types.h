@@ -1,6 +1,7 @@
 #ifndef MEL_TYPES_H
 #define MEL_TYPES_H
-enum { mel_strt, mel_intt, mel_flot, mel_pairt, mel_funt, mel_symt, mel_chart, mel_envt };
+#include "memory.h"
+enum { mel_strt, mel_intt, mel_flot, mel_pairt, mel_cfunt, mel_symt, mel_chart, mel_envt };
 
 
 
@@ -18,6 +19,10 @@ struct mel_char {
 
 struct mel_value;
 
+struct mel_cfun {
+  struct mel_value* (*cfun)(struct mel_pool* p, struct mel_value* arg_list);
+};
+
 struct mel_pair {
   struct mel_value *fst;
   struct mel_value *snd;
@@ -32,6 +37,7 @@ struct mel_value {
     struct mel_int int_val;
     struct mel_char char_val;
     struct mel_flo flo_val;
+    struct mel_cfun cfun_val;
     struct mel_pair pair_val;
   } value;
 };

@@ -88,4 +88,11 @@ struct mel_value* mel_create_string1(struct mel_pool* p, char* s) {
     return cons;
   }
 }
-     
+
+struct mel_value* mel_alloc_cfun(struct mel_pool* p, struct mel_value* (*f)(struct mel_pool* p, struct mel_value* args)) {
+  struct mel_value* v = mel_alloc_value(p);
+  v->mel_type = mel_cfunt;
+  v->value.cfun_val.cfun = f;
+  return v;
+}
+
