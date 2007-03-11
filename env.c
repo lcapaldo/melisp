@@ -4,6 +4,8 @@
 #include "symbols.h"
 static struct mel_value* lookup_r(struct mel_pool* p, struct mel_value* name, struct mel_value* env);
 static struct mel_value* add( struct mel_pool* p, struct mel_value* args);
+static struct mel_value* cons(struct mel_pool* p, struct mel_value* args);
+static struct mel_value* car(struct mel_pool* p, struct mel_value* args);
 struct mel_value* mel_lookup(struct mel_pool* p, struct mel_value* name, struct mel_value* env) {
   return lookup_r(p, name, mel_car( env ));
 }
@@ -29,8 +31,11 @@ struct mel_value* mel_set_global(struct mel_pool* p, struct mel_value* name, str
 
 struct mel_value* mel_standard_env(struct mel_pool* p) {
   struct mel_value* env = mel_cons(p, 0, 0);
-  mel_set_global(p, mel_cdr(mel_read(p, "bar")), mel_alloc_float(p, 2.3), mel_set_global(p, mel_cdr(mel_read(p, "foo" ) ), mel_alloc_int(p, 7), env));
   mel_set_global(p, mel_cdr(mel_read(p, "+")), mel_alloc_cfun(p, add), env);
+  mel_set_global(p, mel_cdr(mel_read(p, "nil")), 0, env);
+  mel_set_global(p, mel_cdr(mel_read(p, "cons")), mel_alloc_cfun(p, cons), env);
+  mel_set_global(p, mel_cdr(mel_read(p, "car")), mel_alloc_cfun(p, car), env);
+
   return env; 
 }
 
@@ -59,5 +64,13 @@ static struct mel_value* add( struct mel_pool* p, struct mel_value* args) {
   } else {
     return mel_alloc_int(p, res);
   }
+}
+
+static struct mel_value* cons(struct mel_pool* p, struct mel_value* args) {
+  return mel_cons(p, mel_car( args ), mel_car( mel_cdr( args ) ));
+}
+
+static struct mel_value* car(struct mel_pool* p, struct mel_value* args) {
+  return mel_car( mel_car( args ) );
 }
 
