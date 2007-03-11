@@ -4,3 +4,4 @@ syntax: glob
 test_string
 .gdb_history
 test_read
+test_repl
