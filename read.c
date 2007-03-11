@@ -10,6 +10,7 @@ static struct mel_value* read_string(struct mel_pool* p, char **s, int* success)
 static struct mel_value* read_sym(struct mel_pool* p, char **s, int* success);
 static struct mel_value* read_list(struct mel_pool* p, char **s, int* success);
 static struct mel_value* read_listing(struct mel_pool* p, char **s, int* success );
+static struct mel_value* read_inner_string(struct mel_pool* p, char **s, int* success);
 
 
 struct mel_value* mel_read(struct mel_pool* p, char *s) {
@@ -123,10 +124,31 @@ static struct mel_value* read_number(struct mel_pool* p, char **s, int* success)
   }
 }
 
-static struct mel_value* read_string(struct mel_pool* p, char **s, int* success)
-{
-  return 0;
+static struct mel_value* read_string(struct mel_pool* p, char **s, int* success) {
+  *s = *s + 1;
+  return read_inner_string(p, s, success);
 }
+static struct mel_value* read_inner_string(struct mel_pool* p, char **s, int* success)
+{
+  struct mel_value* rv;
+  struct mel_value* c;
+  if( **s == '"' ) {
+    *s = *s + 1;
+    return 0;
+  }
+
+  if( **s == '\0' ) {
+    *success = mel_err;
+    return 0;
+  }
+
+  c = mel_alloc_char(p, **s);
+  *s = *s + 1;
+  rv = mel_cons(p, c, read_inner_string(p, s, success));
+  rv->mel_type = mel_strt;
+  return rv;
+}
+
 static struct mel_value* read_sym(struct mel_pool* p, char **s, int* success)
 {
   struct mel_value* rv;

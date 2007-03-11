@@ -5,6 +5,7 @@ static void print_pair( struct mel_value* value );
 static void print_list( struct mel_value* value );
 static void print_sym( struct mel_value* value );
 static void print_float( struct mel_value* value );
+static void print_string( struct mel_value* value );
 void mel_print( struct mel_value* value ) {
   if( value == 0 ) {
     printf("nil");
@@ -23,6 +24,9 @@ void mel_print( struct mel_value* value ) {
       break;
     case mel_symt:
       print_sym( value );
+      break;
+    case mel_strt:
+      print_string( value );
       break;
     default:
       break;
@@ -74,5 +78,16 @@ static void print_sym( struct mel_value* value ) {
 
 static void print_float( struct mel_value* value ) {
   printf("%f", value->value.flo_val.val);
+}
+
+static void print_string( struct mel_value* value ) {
+  printf("\"");
+  struct mel_value* cursor = value;
+  while( cursor != 0 ) {
+    printf("%c", cursor->value.pair_val.fst->value.char_val.val);
+    cursor = cursor->value.pair_val.snd;
+  }
+
+  printf("\"");
 }
 
