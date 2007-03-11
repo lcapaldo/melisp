@@ -153,7 +153,7 @@ static struct mel_value* read_sym(struct mel_pool* p, char **s, int* success)
 {
   struct mel_value* rv;
   struct mel_value* c;
-  if( ! isspace(**s) && **s != '(' && **s != ')' ) {
+  if( ! isspace(**s) && **s != '(' && **s != ')' && **s != '\0') {
     c = mel_alloc_char(p, *s[0]);
     *s = *s + 1;
     rv = mel_cons(p, c, read_sym(p, s, success));

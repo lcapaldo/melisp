@@ -1,5 +1,5 @@
 #include "list.h"
-
+/*
 void mel_dolist(struct mel_pool* p, struct mel_value* list, (void)(f*)(struct mel_value* v, struct mel_pool* p)) {
   struct mel_value* cursor = list;
   while( cursor ) {
@@ -14,6 +14,14 @@ struct mel_value*  mel_maplist(struct mel_pool* p, struct mel_value* list, (stru
   } else {
     return 0;
   }
+}
+*/
+struct mel_value* mel_cdr(struct mel_value* list) {
+  return list->value.pair_val.snd;
+}
+
+struct mel_value* mel_car(struct mel_value* list) {
+  return list->value.pair_val.fst;
 }
 
 
