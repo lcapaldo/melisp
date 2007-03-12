@@ -112,10 +112,14 @@ static void print_char( struct mel_value* value ) {
 }
 
 static void print_lispfun( struct mel_value* value ) {
-  printf("#<LAMBDA: ");
+  printf("#<lambda: ");
   mel_print( mel_car( value ) );
   printf(" -> ");
-  mel_print( mel_cdr( value ) );
+  mel_print( mel_car ( mel_cdr( value ) ) );
+  if( mel_car( mel_cdr( mel_cdr( value ) ) ) ) {
+    printf(" closure: ");
+    mel_print( mel_car( mel_cdr( mel_cdr( value ) ) ) );
+  }
   printf(">");
 }
 
