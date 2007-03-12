@@ -3,6 +3,7 @@
 #include "list.h"
 #include "symbols.h"
 #include "eval.h"
+#include "print.h"
 static struct mel_value* lookup_r(struct mel_pool* p, struct mel_value* name, struct mel_value* env);
 static struct mel_value* add( struct mel_pool* p, struct mel_value* args);
 static struct mel_value* cons(struct mel_pool* p, struct mel_value* args);
@@ -12,6 +13,8 @@ static struct mel_value* string_to_list(struct mel_pool* p, struct mel_value* ar
 static struct mel_value* eval(struct mel_pool* p, struct mel_value* args);
 static struct mel_value* list(struct mel_pool* p, struct mel_value* args);
 static struct mel_value* id(struct mel_pool* p, struct mel_value* args);
+static struct mel_value* obj_count(struct mel_pool* p, struct mel_value* args);
+static struct mel_value* print_memory(struct mel_pool* p, struct mel_value* args);
 struct mel_value* mel_lookup(struct mel_pool* p, struct mel_value* name) {
   return lookup_r(p, name, mel_car( p->env ));
 }
@@ -47,6 +50,8 @@ struct mel_value* mel_standard_env(struct mel_pool* p) {
   mel_set_global(p, mel_cdr(mel_read(p, "eval")), mel_alloc_cfun(p, eval));
   mel_set_global(p, mel_cdr(mel_read(p, "list")), mel_alloc_cfun(p, list));
   mel_set_global(p, mel_cdr(mel_read(p, "id")), mel_alloc_cfun(p, id));
+  mel_set_global(p, mel_cdr(mel_read(p, "object-count")), mel_alloc_cfun(p, obj_count));
+  mel_set_global(p, mel_cdr(mel_read(p, "print-memory")), mel_alloc_cfun(p, print_memory));
   
 
   return p->env; 
@@ -111,5 +116,19 @@ static struct mel_value* list(struct mel_pool* p, struct mel_value* args) {
 
 static struct mel_value* id(struct mel_pool* p, struct mel_value* args) {
   return mel_car( args );
+}
+
+static struct mel_value* obj_count(struct mel_pool* p, struct mel_value* args) {
+  return mel_alloc_int(p, p->obj_count);
+}
+
+static struct mel_value* print_memory(struct mel_pool* p, struct mel_value* args) {
+  struct mel_value* i; 
+  int cnt = p->obj_count;
+  for( i = p->start; i < p->start + (cnt * sizeof(struct mel_value)); i++ ) {
+    mel_print( i );
+    printf("\n");
+  }
+  return 0;
 }
 
