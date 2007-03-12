@@ -12,6 +12,7 @@ static struct mel_value* read_list(struct mel_pool* p, char **s, int* success);
 static struct mel_value* read_listing(struct mel_pool* p, char **s, int* success );
 static struct mel_value* read_inner_string(struct mel_pool* p, char **s, int* success);
 static struct mel_value* read_quote(struct mel_pool* p, char **s, int* success);
+static struct mel_value* read_char(struct mel_pool* p, char **s, int* success);
 
 
 struct mel_value* mel_read(struct mel_pool* p, char *s) {
@@ -42,6 +43,9 @@ struct mel_value* read_expr(struct mel_pool* p, char **s, int* success) {
       break;
     case '"':
       return read_string(p, s, success );
+      break;
+    case '?':
+      return read_char(p, s, success );
       break;
     case '\'':
       return read_quote(p, s, success );
@@ -175,5 +179,13 @@ static struct mel_value* read_quote(struct mel_pool* p, char **s, int* success) 
   skip_ws( s );
   expr = read_expr(p, s, success);
   return mel_cons(p, mel_cdr( mel_read(p, "quote") ), mel_cons(p, expr, 0));
+}
+
+static struct mel_value* read_char(struct mel_pool* p, char **s, int* success) {
+  *s = *s + 1;
+  struct mel_value* r;
+  r = mel_alloc_char(p, **s);
+  *s = *s + 1;
+  return r;
 }
 

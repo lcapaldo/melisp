@@ -20,9 +20,9 @@ int main() {
     if( input[0] == '!' ) {
       printf("%s\n", mel_sym_to_cstr(mel_read( &p, input + 1 )->value.pair_val.snd));
       continue;
-    } else if ( input[0] == '?' ) {
+    } /* else if ( input[0] == '?' ) {
       mel_print( env->value.pair_val.snd );
-    }
+    } */
 
     s = mel_read( &p, input );
     if( s->value.pair_val.fst->value.int_val.val != mel_noerr ) {
