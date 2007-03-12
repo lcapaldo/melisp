@@ -31,4 +31,5 @@ env.o: env.c env.h memory.h types.h
 	$(CC) $(CFLAGS) -c env.c -o env.o
 list.o: list.c list.h memory.h types.h
 	$(CC) $(CFLAGS) -c list.c -o list.o
-# DO NOT DELETE
+clean:
+	rm *.o test_repl

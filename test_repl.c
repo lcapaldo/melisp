@@ -8,13 +8,11 @@
 int main() {
   struct mel_value* s;
   struct mel_pool p;
-  struct mel_value* env;
   char input[1024];
   if ( mel_init_pool(&p, 1000000) == -1 ) {
     fprintf(stderr, "Error initing pool\n");
     exit( 1 );
   }
-  env = mel_standard_env(&p);
   printf("> ");
   while( fgets( input, 1024, stdin ) ) {
     if( input[0] == '!' ) {
@@ -30,7 +28,7 @@ int main() {
     }
     mel_print( s->value.pair_val.snd );
     printf(" => ");
-    mel_print( mel_eval(&p, s->value.pair_val.snd, env ) );
+    mel_print( mel_eval(&p, s->value.pair_val.snd ) );
     printf("\n> ");
   }
 

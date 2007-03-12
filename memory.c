@@ -9,6 +9,7 @@ int mel_init_pool( struct mel_pool* pool, int count ) {
   pool->start = buf;
   pool->current = buf;
   pool->end = buf + sizeof(struct mel_value) * count;
+  pool->env = mel_standard_env(pool);
   pool->obj_count = 0;
 
   return 0;

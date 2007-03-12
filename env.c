@@ -10,8 +10,10 @@ static struct mel_value* car(struct mel_pool* p, struct mel_value* args);
 static struct mel_value* cdr(struct mel_pool* p, struct mel_value* args);
 static struct mel_value* string_to_list(struct mel_pool* p, struct mel_value* args);
 static struct mel_value* eval(struct mel_pool* p, struct mel_value* args);
-struct mel_value* mel_lookup(struct mel_pool* p, struct mel_value* name, struct mel_value* env) {
-  return lookup_r(p, name, mel_car( env ));
+static struct mel_value* list(struct mel_pool* p, struct mel_value* args);
+static struct mel_value* id(struct mel_pool* p, struct mel_value* args);
+struct mel_value* mel_lookup(struct mel_pool* p, struct mel_value* name) {
+  return lookup_r(p, name, mel_car( p->env ));
 }
 
 
@@ -28,23 +30,26 @@ static struct mel_value* lookup_r(struct mel_pool* p, struct mel_value* name, st
 
 
 
-struct mel_value* mel_set_global(struct mel_pool* p, struct mel_value* name, struct mel_value* val, struct mel_value* env) {
-  env->value.pair_val.fst = mel_cons(p, mel_cons(p, name, val ), mel_car( env ));
-  return env;
+struct mel_value* mel_set_global(struct mel_pool* p, struct mel_value* name, struct mel_value* val) {
+  p->env->value.pair_val.fst = mel_cons(p, mel_cons(p, name, val ), mel_car( p->env ));
+  return p->env;
 }
 
 struct mel_value* mel_standard_env(struct mel_pool* p) {
-  struct mel_value* env = mel_cons(p, 0, 0);
-  mel_set_global(p, mel_cdr(mel_read(p, "+")), mel_alloc_cfun(p, add), env);
-  mel_set_global(p, mel_cdr(mel_read(p, "nil")), 0, env);
-  mel_set_global(p, mel_cdr(mel_read(p, "cons")), mel_alloc_cfun(p, cons), env);
-  mel_set_global(p, mel_cdr(mel_read(p, "car")), mel_alloc_cfun(p, car), env);
-  mel_set_global(p, mel_cdr(mel_read(p, "cdr")), mel_alloc_cfun(p, cdr), env);
-  mel_set_global(p, mel_cdr(mel_read(p, "string->list")), mel_alloc_cfun(p, string_to_list), env);
-  mel_set_global(p, mel_cdr(mel_read(p, "copy-list")), mel_alloc_cfun(p, string_to_list), env);
-  mel_set_global(p, mel_cdr(mel_read(p, "eval")), mel_alloc_cfun(p, eval), env);
+  p->env = mel_cons(p, 0, 0);
+  mel_set_global(p, mel_cdr(mel_read(p, "+")), mel_alloc_cfun(p, add));
+  mel_set_global(p, mel_cdr(mel_read(p, "nil")), 0);
+  mel_set_global(p, mel_cdr(mel_read(p, "cons")), mel_alloc_cfun(p, cons));
+  mel_set_global(p, mel_cdr(mel_read(p, "car")), mel_alloc_cfun(p, car));
+  mel_set_global(p, mel_cdr(mel_read(p, "cdr")), mel_alloc_cfun(p, cdr));
+  mel_set_global(p, mel_cdr(mel_read(p, "string->list")), mel_alloc_cfun(p, string_to_list));
+  mel_set_global(p, mel_cdr(mel_read(p, "copy-list")), mel_alloc_cfun(p, string_to_list));
+  mel_set_global(p, mel_cdr(mel_read(p, "eval")), mel_alloc_cfun(p, eval));
+  mel_set_global(p, mel_cdr(mel_read(p, "list")), mel_alloc_cfun(p, list));
+  mel_set_global(p, mel_cdr(mel_read(p, "id")), mel_alloc_cfun(p, id));
+  
 
-  return env; 
+  return p->env; 
 }
 
 
@@ -97,6 +102,14 @@ static struct mel_value* string_to_list(struct mel_pool* p, struct mel_value* ar
 }
 
 static struct mel_value* eval(struct mel_pool* p, struct mel_value* args) {
-  return mel_eval(p, mel_cdr( args ), mel_car( args ) );
+  return mel_eval(p, args);
+}
+
+static struct mel_value* list(struct mel_pool* p, struct mel_value* args) {
+  return args;
+}
+
+static struct mel_value* id(struct mel_pool* p, struct mel_value* args) {
+  return mel_car( args );
 }
 

@@ -6,3 +6,4 @@ test_string
 test_read
 test_repl
 *.swp
+tags

@@ -1,11 +1,13 @@
 #ifndef MEL_MEMORY_H
 #define MEL_MEMORY_H
 #include "types.h"
+#include "env.h"
 #include <stdlib.h>
 struct mel_pool {
   void* current;
   void* start;
   void* end;
+  struct mel_value* env;
   int obj_count;
 };
 
