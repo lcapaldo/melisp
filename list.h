@@ -9,5 +9,6 @@ struct mel_value* mel_cdr(struct mel_value* list);
 
 struct mel_value* mel_car(struct mel_value* list);
 struct mel_value* mel_zip(struct mel_pool* p, struct mel_value* lst1, struct mel_value* lst2);
+struct mel_value* mel_append(struct mel_pool* p, struct mel_value* lst1, struct mel_value* lst2);
 #endif
 

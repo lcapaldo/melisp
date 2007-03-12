@@ -29,3 +29,12 @@ struct mel_value* mel_zip(struct mel_pool* p, struct mel_value* lst1, struct mel
   if( lst1 == 0 || lst2 == 0 ) { return 0; }
   return mel_cons(p, mel_cons(p, mel_car( lst1 ), mel_car( lst2 )), mel_zip(p, mel_cdr( lst1 ), mel_cdr( lst2 )));
 }
+
+struct mel_value* mel_append(struct mel_pool* p, struct mel_value* lst1, struct mel_value* lst2) {
+  if( lst1 == 0 ) {
+    return lst2;
+  }
+
+  return mel_cons(p, mel_car( lst1 ), mel_append(p, mel_cdr( lst1 ), lst2 ));
+}
+
