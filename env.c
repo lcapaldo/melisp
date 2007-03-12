@@ -2,11 +2,14 @@
 #include "types.h"
 #include "list.h"
 #include "symbols.h"
+#include "eval.h"
 static struct mel_value* lookup_r(struct mel_pool* p, struct mel_value* name, struct mel_value* env);
 static struct mel_value* add( struct mel_pool* p, struct mel_value* args);
 static struct mel_value* cons(struct mel_pool* p, struct mel_value* args);
 static struct mel_value* car(struct mel_pool* p, struct mel_value* args);
 static struct mel_value* cdr(struct mel_pool* p, struct mel_value* args);
+static struct mel_value* string_to_list(struct mel_pool* p, struct mel_value* args);
+static struct mel_value* eval(struct mel_pool* p, struct mel_value* args);
 struct mel_value* mel_lookup(struct mel_pool* p, struct mel_value* name, struct mel_value* env) {
   return lookup_r(p, name, mel_car( env ));
 }
@@ -37,6 +40,9 @@ struct mel_value* mel_standard_env(struct mel_pool* p) {
   mel_set_global(p, mel_cdr(mel_read(p, "cons")), mel_alloc_cfun(p, cons), env);
   mel_set_global(p, mel_cdr(mel_read(p, "car")), mel_alloc_cfun(p, car), env);
   mel_set_global(p, mel_cdr(mel_read(p, "cdr")), mel_alloc_cfun(p, cdr), env);
+  mel_set_global(p, mel_cdr(mel_read(p, "string->list")), mel_alloc_cfun(p, string_to_list), env);
+  mel_set_global(p, mel_cdr(mel_read(p, "copy-list")), mel_alloc_cfun(p, string_to_list), env);
+  mel_set_global(p, mel_cdr(mel_read(p, "eval")), mel_alloc_cfun(p, eval), env);
 
   return env; 
 }
@@ -79,5 +85,18 @@ static struct mel_value* car(struct mel_pool* p, struct mel_value* args) {
 
 static struct mel_value* cdr(struct mel_pool* p, struct mel_value* args) {
   return mel_cdr( mel_car( args ) );
+}
+static struct mel_value* string_to_list1( struct mel_pool* p, struct mel_value* arg ) {
+  if( arg == 0 ) { return 0; }
+  return mel_cons(p, mel_car( arg ), string_to_list1(p, mel_cdr( arg )));
+}
+
+static struct mel_value* string_to_list(struct mel_pool* p, struct mel_value* args) {
+  struct mel_value* arg = mel_car( args );
+  return mel_cons(p, mel_car( arg ), string_to_list1(p, mel_cdr( arg ) ));
+}
+
+static struct mel_value* eval(struct mel_pool* p, struct mel_value* args) {
+  return mel_eval(p, mel_cdr( args ), mel_car( args ) );
 }
 
