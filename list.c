@@ -25,3 +25,7 @@ struct mel_value* mel_car(struct mel_value* list) {
 }
 
 
+struct mel_value* mel_zip(struct mel_pool* p, struct mel_value* lst1, struct mel_value* lst2) {
+  if( lst1 == 0 || lst2 == 0 ) { return 0; }
+  return mel_cons(p, mel_cons(p, mel_car( lst1 ), mel_car( lst2 )), mel_zip(p, mel_cdr( lst1 ), mel_cdr( lst2 )));
+}

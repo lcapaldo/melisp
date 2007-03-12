@@ -75,6 +75,13 @@ static struct mel_value* eval_function_call(struct mel_pool* p, struct mel_value
   }
   if( f->mel_type == mel_cfunt ) {
     return f->value.cfun_val.cfun(p, arg_list);
+  } else if( f->mel_type == mel_lisp_funt ) {
+    struct mel_value* rv;
+    mel_push_activation_frame(p, f, arg_list);
+    mel_eval(p, mel_cdr(mel_read(p, "(env)")));
+    rv = mel_eval(p, mel_cdr( f ));
+    mel_pop_activation_frame(p);
+    return rv; 
   }
 
   return 0; // other functions not yet implemented

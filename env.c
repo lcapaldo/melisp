@@ -4,7 +4,8 @@
 #include "symbols.h"
 #include "eval.h"
 #include "print.h"
-static struct mel_value* lookup_r(struct mel_pool* p, struct mel_value* name, struct mel_value* env);
+static struct mel_value* lookup_global_r(struct mel_pool* p, struct mel_value* name, struct mel_value* env);
+static struct mel_value* lookup_local_r(struct mel_pool* p, struct mel_value* name, struct mel_value* env);
 static struct mel_value* add( struct mel_pool* p, struct mel_value* args);
 static struct mel_value* cons(struct mel_pool* p, struct mel_value* args);
 static struct mel_value* car(struct mel_pool* p, struct mel_value* args);
@@ -16,19 +17,35 @@ static struct mel_value* id(struct mel_pool* p, struct mel_value* args);
 static struct mel_value* obj_count(struct mel_pool* p, struct mel_value* args);
 static struct mel_value* print_memory(struct mel_pool* p, struct mel_value* args);
 struct mel_value* mel_lookup(struct mel_pool* p, struct mel_value* name) {
-  return lookup_r(p, name, mel_car( p->env ));
+  struct mel_value* rv = 0;
+  if( mel_cdr( p->env ) != 0 ) {
+    rv = lookup_local_r(p, name, mel_car( mel_cdr( p->env ) ));
+  }
+  if( rv == 0 ) {
+    return lookup_global_r(p, name, mel_car( p->env ));
+  } else {
+    return rv;
+  }
 }
 
 
-static struct mel_value* lookup_r(struct mel_pool* p, struct mel_value* name, struct mel_value* env) {
+static struct mel_value* lookup_global_r(struct mel_pool* p, struct mel_value* name, struct mel_value* env) {
   if( env == 0 ) return 0; 
   if( mel_sym_eq(mel_car( mel_car( env ) ), name) ) {
     return mel_cdr( mel_car( env ) );
   } else {
-    return lookup_r(p, name, mel_cdr( env ));
+    return lookup_global_r(p, name, mel_cdr( env ));
   }
 }
 
+static struct mel_value* lookup_local_r(struct mel_pool* p, struct mel_value* name, struct mel_value* env) {
+  if( env == 0 ) return 0; 
+  if( mel_sym_eq(mel_car( mel_car( env ) ), name) ) {
+    return mel_cdr( mel_car( env ) );
+  } else {
+    return lookup_local_r(p, name, mel_cdr( env ));
+  }
+}
 
 
 
@@ -52,7 +69,7 @@ struct mel_value* mel_standard_env(struct mel_pool* p) {
   mel_set_global(p, mel_cdr(mel_read(p, "id")), mel_alloc_cfun(p, id));
   mel_set_global(p, mel_cdr(mel_read(p, "object-count")), mel_alloc_cfun(p, obj_count));
   mel_set_global(p, mel_cdr(mel_read(p, "print-memory")), mel_alloc_cfun(p, print_memory));
-  
+
 
   return p->env; 
 }
