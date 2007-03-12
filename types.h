@@ -1,7 +1,7 @@
 #ifndef MEL_TYPES_H
 #define MEL_TYPES_H
 #include "memory.h"
-enum { mel_strt, mel_intt, mel_flot, mel_pairt, mel_cfunt, mel_symt, mel_chart, mel_envt };
+enum { mel_strt, mel_intt, mel_flot, mel_pairt, mel_cfunt, mel_symt, mel_chart, mel_envt, mel_lisp_funt };
 
 
 

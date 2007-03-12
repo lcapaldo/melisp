@@ -8,6 +8,7 @@ static void print_float( struct mel_value* value );
 static void print_string( struct mel_value* value );
 static void print_cfunc( struct mel_value* value );
 static void print_char( struct mel_value* value );
+static void print_lispfun( struct mel_value* value );
 void mel_print( struct mel_value* value ) {
   if( value == 0 ) {
     printf("nil");
@@ -35,6 +36,9 @@ void mel_print( struct mel_value* value ) {
       break;
     case mel_chart:
       print_char( value );
+      break;
+    case mel_lisp_funt:
+      print_lispfun( value );
       break;
     default:
       break;
@@ -105,5 +109,13 @@ static void print_cfunc( struct mel_value* value ) {
 
 static void print_char( struct mel_value* value ) {
   printf("?%c", value->value.char_val.val);
+}
+
+static void print_lispfun( struct mel_value* value ) {
+  printf("#<LAMBDA: ");
+  mel_print( mel_car( value ) );
+  printf(" -> ");
+  mel_print( mel_cdr( value ) );
+  printf(">");
 }
 

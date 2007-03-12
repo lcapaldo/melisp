@@ -59,6 +59,8 @@ static struct mel_value* eval_special_form(struct mel_pool* p, struct mel_value*
     } else {
       return mel_eval(p, when_false);
     }
+  } else if ( mel_sym_eq( mel_car( expr ), mel_cdr( mel_read(p, "lambda")))) {
+    return mel_make_fn(p,  mel_cdr( expr ));
   }
   return 0;
 }
@@ -91,6 +93,8 @@ static int is_special_form(struct mel_pool* p, struct mel_value* expr ) {
   } else if ( mel_sym_eq( mel_car( expr ), mel_cdr( mel_read(p, "env")))) {
     return 1;
   } else if ( mel_sym_eq( mel_car( expr ), mel_cdr( mel_read(p, "if")))) {
+    return 1;
+  } else if ( mel_sym_eq( mel_car( expr ), mel_cdr( mel_read(p, "lambda")))) {
     return 1;
   } else {
     return 0;
