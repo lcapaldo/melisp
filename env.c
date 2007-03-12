@@ -4,6 +4,7 @@
 #include "symbols.h"
 #include "eval.h"
 #include "print.h"
+#include <stdlib.h>
 static struct mel_value* lookup_global_r(struct mel_pool* p, struct mel_value* name, struct mel_value* env);
 static struct mel_value* lookup_local_r(struct mel_pool* p, struct mel_value* name, struct mel_value* env);
 static struct mel_value* add( struct mel_pool* p, struct mel_value* args);
@@ -16,6 +17,7 @@ static struct mel_value* list(struct mel_pool* p, struct mel_value* args);
 static struct mel_value* id(struct mel_pool* p, struct mel_value* args);
 static struct mel_value* obj_count(struct mel_pool* p, struct mel_value* args);
 static struct mel_value* print_memory(struct mel_pool* p, struct mel_value* args);
+static struct mel_value* quit(struct mel_pool* p, struct mel_value* args);
 struct mel_value* mel_lookup(struct mel_pool* p, struct mel_value* name) {
   struct mel_value* rv = 0;
   if( mel_cdr( p->env ) != 0 ) {
@@ -69,6 +71,7 @@ struct mel_value* mel_standard_env(struct mel_pool* p) {
   mel_set_global(p, mel_cdr(mel_read(p, "id")), mel_alloc_cfun(p, id));
   mel_set_global(p, mel_cdr(mel_read(p, "object-count")), mel_alloc_cfun(p, obj_count));
   mel_set_global(p, mel_cdr(mel_read(p, "print-memory")), mel_alloc_cfun(p, print_memory));
+  mel_set_global(p, mel_cdr(mel_read(p, "quit")), mel_alloc_cfun(p, quit));
 
 
   return p->env; 
@@ -147,5 +150,9 @@ static struct mel_value* print_memory(struct mel_pool* p, struct mel_value* args
     printf("\n");
   }
   return 0;
+}
+
+static struct mel_value* quit(struct mel_pool* p, struct mel_value* args) {
+  exit( 0 );
 }
 

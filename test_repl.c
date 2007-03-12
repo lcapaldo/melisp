@@ -5,6 +5,16 @@
 #include "read.h"
 #include "symbols.h"
 #include "eval.h"
+#include <signal.h>
+#include <setjmp.h>
+
+jmp_buf j;
+
+void handle_segv( int num ) {
+  printf("\nMemory oops.\n");
+  longjmp(j, 0);
+}
+
 int main() {
   struct mel_value* s;
   struct mel_pool p;
@@ -13,6 +23,9 @@ int main() {
     fprintf(stderr, "Error initing pool\n");
     exit( 1 );
   }
+  signal(SIGBUS, handle_segv);
+  signal(SIGBUS, handle_segv);
+  setjmp(j);
   printf("> ");
   while( fgets( input, 1024, stdin ) ) {
     if( input[0] == '!' ) {
@@ -29,6 +42,7 @@ int main() {
     mel_print( s->value.pair_val.snd );
     printf(" => ");
     mel_print( mel_eval(&p, s->value.pair_val.snd ) );
+    setjmp(j);
     printf("\n> ");
   }
 
