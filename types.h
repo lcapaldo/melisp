@@ -42,4 +42,6 @@ struct mel_value {
   } value;
 };
 
+int mel_equal(struct mel_value v1, struct mel_value v2); 
+
 #endif
