@@ -17,6 +17,7 @@ static struct mel_value* list(struct mel_pool* p, struct mel_value* args);
 static struct mel_value* id(struct mel_pool* p, struct mel_value* args);
 static struct mel_value* obj_count(struct mel_pool* p, struct mel_value* args);
 static struct mel_value* print_memory(struct mel_pool* p, struct mel_value* args);
+static struct mel_value* eq(struct mel_pool* p, struct mel_value* args);
 static struct mel_value* quit(struct mel_pool* p, struct mel_value* args);
 struct mel_value* mel_lookup(struct mel_pool* p, struct mel_value* name) {
   struct mel_value* rv = 0;
@@ -72,6 +73,7 @@ struct mel_value* mel_standard_env(struct mel_pool* p) {
   mel_set_global(p, mel_cdr(mel_read(p, "object-count")), mel_alloc_cfun(p, obj_count));
   mel_set_global(p, mel_cdr(mel_read(p, "print-memory")), mel_alloc_cfun(p, print_memory));
   mel_set_global(p, mel_cdr(mel_read(p, "quit")), mel_alloc_cfun(p, quit));
+  mel_set_global(p, mel_cdr(mel_read(p, "=")), mel_alloc_cfun(p, eq));
 
 
   return p->env; 
@@ -127,7 +129,7 @@ static struct mel_value* string_to_list(struct mel_pool* p, struct mel_value* ar
 }
 
 static struct mel_value* eval(struct mel_pool* p, struct mel_value* args) {
-  return mel_eval(p, args);
+  return mel_eval(p, mel_car( args ));
 }
 
 static struct mel_value* list(struct mel_pool* p, struct mel_value* args) {
@@ -145,7 +147,7 @@ static struct mel_value* obj_count(struct mel_pool* p, struct mel_value* args) {
 static struct mel_value* print_memory(struct mel_pool* p, struct mel_value* args) {
   struct mel_value* i; 
   int cnt = p->obj_count;
-  for( i = p->start; i < p->start + (cnt * sizeof(struct mel_value)); i++ ) {
+  for( i = p->start; i < (struct mel_value*)p->start + (cnt * sizeof(struct mel_value)); i++ ) {
     mel_print( i );
     printf("\n");
   }
@@ -154,5 +156,12 @@ static struct mel_value* print_memory(struct mel_pool* p, struct mel_value* args
 
 static struct mel_value* quit(struct mel_pool* p, struct mel_value* args) {
   exit( 0 );
+}
+static struct mel_value* eq(struct mel_pool* p, struct mel_value* args) {
+  if( mel_car( args ) == mel_car( mel_cdr( args ) ))  {
+    return args;
+  } else {
+    return 0;
+  }
 }
 

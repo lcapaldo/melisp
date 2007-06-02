@@ -3,5 +3,6 @@
 #include "types.h"
 #include "memory.h"
 #include "env.h"
+#include "functions.h"
 struct mel_value* mel_eval(struct mel_pool* p, struct mel_value* expr);
 #endif

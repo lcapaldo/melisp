@@ -1,7 +1,7 @@
 #ifndef MEL_MEMORY_H
 #define MEL_MEMORY_H
-#include "types.h"
 #include "env.h"
+#include "types.h"
 #include <stdlib.h>
 struct mel_pool {
   void* current;
@@ -10,7 +10,6 @@ struct mel_pool {
   struct mel_value* env;
   int obj_count;
 };
-
 int mel_init_pool( struct mel_pool* pool, int count );
 void mel_free_pool( struct mel_pool* pool );
 struct mel_value* mel_alloc_value( struct mel_pool* pool );

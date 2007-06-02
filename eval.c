@@ -68,7 +68,7 @@ static struct mel_value* eval_special_form(struct mel_pool* p, struct mel_value*
 static struct mel_value* eval_function_call(struct mel_pool* p, struct mel_value* expr) {
   struct mel_value* fname = mel_car( expr );
   struct mel_value* arg_list = eval_arg_list(p,  mel_cdr( expr ) );
-  struct mel_value* f = mel_lookup(p, fname);
+  struct mel_value* f = mel_eval(p, fname);
   if( f == 0 ) {
     printf("Think you're clever?\n");
     return 0;

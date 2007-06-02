@@ -3,7 +3,7 @@
 #include "memory.h"
 enum { mel_strt, mel_intt, mel_flot, mel_pairt, mel_cfunt, mel_symt, mel_chart, mel_envt, mel_lisp_funt };
 
-
+struct mel_pool;
 
 struct mel_int {
   int val;
