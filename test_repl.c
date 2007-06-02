@@ -39,9 +39,11 @@ int main() {
     if( s->value.pair_val.fst->value.int_val.val != mel_noerr ) {
       printf("parse error\n");
     }
+    struct mel_value* res;
+    res = mel_eval(&p, s->value.pair_val.snd);
     mel_print( s->value.pair_val.snd );
     printf(" => ");
-    mel_print( mel_eval(&p, s->value.pair_val.snd ) );
+    mel_print( res );
     setjmp(j);
     printf("\n> ");
   }
