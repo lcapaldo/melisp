@@ -8,6 +8,7 @@
 static struct mel_value* lookup_global_r(struct mel_pool* p, struct mel_value* name, struct mel_value* env);
 static struct mel_value* lookup_local_r(struct mel_pool* p, struct mel_value* name, struct mel_value* env);
 static struct mel_value* add( struct mel_pool* p, struct mel_value* args);
+static struct mel_value* sub( struct mel_pool* p, struct mel_value* args);
 static struct mel_value* mul( struct mel_pool* p, struct mel_value* args);
 static struct mel_value* cons(struct mel_pool* p, struct mel_value* args);
 static struct mel_value* car(struct mel_pool* p, struct mel_value* args);
@@ -64,6 +65,7 @@ struct mel_value* mel_set_global(struct mel_pool* p, struct mel_value* name, str
 struct mel_value* mel_standard_env(struct mel_pool* p) {
   p->env = mel_cons(p, 0, 0);
   mel_set_global(p, mel_cdr(mel_read(p, "+")), mel_alloc_cfun(p, add));
+  mel_set_global(p, mel_cdr(mel_read(p, "-")), mel_alloc_cfun(p, sub));
   mel_set_global(p, mel_cdr(mel_read(p, "*")), mel_alloc_cfun(p, mul));
   mel_set_global(p, mel_cdr(mel_read(p, "nil")), 0);
   mel_set_global(p, mel_cdr(mel_read(p, "cons")), mel_alloc_cfun(p, cons));
@@ -86,6 +88,45 @@ struct mel_value* mel_standard_env(struct mel_pool* p) {
   return p->env; 
 }
 
+static struct mel_value* sub( struct mel_pool* p, struct mel_value* args) {
+  int res = 0;
+  double dres = 0.0;
+  int n_dbls = 0;
+
+  struct mel_value* c = mel_cdr( args );
+  struct mel_value* init = mel_car( args );
+  if( init->mel_type == mel_intt ) {
+    res = init->value.int_val.val;
+    dres = res;
+  } else {
+    n_dbls++;
+    dres = init->value.flo_val.val;
+    res = (int)dres;
+  }
+
+  if( !c ) {
+    res = -res;
+    dres = -dres;
+  }
+  while( c != 0 ) {
+    if ( mel_car( c )->mel_type == mel_intt ) {
+      res -= mel_car( c )->value.int_val.val;
+      dres -= mel_car( c )->value.int_val.val;
+    } else if( mel_car( c )->mel_type == mel_flot ) {
+      dres -= mel_car( c )->value.flo_val.val;
+      n_dbls++;
+    } else {
+      return 0;
+    }
+    c = mel_cdr( c );
+  }
+
+  if( n_dbls > 0 ) {
+    return mel_alloc_float(p, dres);
+  } else {
+    return mel_alloc_int(p, res);
+  }
+}
 
 static struct mel_value* add( struct mel_pool* p, struct mel_value* args) {
   int res = 0;
