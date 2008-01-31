@@ -29,3 +29,6 @@ types.o: types.h types.c memory.h
 	$(CC) $(CFLAGS) -c types.c -o types.o
 clean:
 	rm *.o test_repl
+nuke_backups:
+	rm *~
+
