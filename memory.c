@@ -34,6 +34,13 @@ struct mel_value* mel_alloc_value( struct mel_pool* pool ) {
   }
 }
 
+struct mel_value* mel_alloc_disttrue( struct mel_pool* pool ) {
+  struct mel_value* r;
+  r = mel_alloc_value(pool);
+  r->mel_type = mel_true;
+  return r;
+}
+
 struct mel_value* mel_cons(struct mel_pool* pool, struct mel_value* first, struct mel_value* second) {
   struct mel_value* cons_cell;
   cons_cell = mel_alloc_value(pool);

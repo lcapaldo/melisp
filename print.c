@@ -40,6 +40,9 @@ void mel_print( struct mel_value* value ) {
     case mel_lisp_funt:
       print_lispfun( value );
       break;
+    case mel_true:
+      printf("true");
+      break;
     default:
       break;
   }

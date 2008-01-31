@@ -21,6 +21,7 @@ static struct mel_value* print_memory(struct mel_pool* p, struct mel_value* args
 static struct mel_value* print(struct mel_pool* p, struct mel_value* args);
 static struct mel_value* eq(struct mel_pool* p, struct mel_value* args);
 static struct mel_value* quit(struct mel_pool* p, struct mel_value* args);
+static struct mel_value* disttrue;
 struct mel_value* mel_lookup(struct mel_pool* p, struct mel_value* name) {
   struct mel_value* rv = 0;
   if( mel_cdr( p->env ) != 0 ) {
@@ -78,6 +79,8 @@ struct mel_value* mel_standard_env(struct mel_pool* p) {
   mel_set_global(p, mel_cdr(mel_read(p, "print")), mel_alloc_cfun(p, print));
   mel_set_global(p, mel_cdr(mel_read(p, "quit")), mel_alloc_cfun(p, quit));
   mel_set_global(p, mel_cdr(mel_read(p, "=")), mel_alloc_cfun(p, eq));
+  disttrue = mel_alloc_disttrue(p);
+  mel_set_global(p, mel_cdr(mel_read(p, "true")), disttrue);
 
 
   return p->env; 
@@ -195,7 +198,7 @@ static struct mel_value* quit(struct mel_pool* p, struct mel_value* args) {
 }
 static struct mel_value* eq(struct mel_pool* p, struct mel_value* args) {
   if( mel_equal( *mel_car( args ), *mel_car( mel_cdr( args ) ) )) {
-      return args;
+      return disttrue;
     } else {
       return 0;
     }
