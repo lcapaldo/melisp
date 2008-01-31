@@ -17,6 +17,8 @@ int mel_equal(struct mel_value v1, struct mel_value v2) {
     case mel_symt:
     return (v1.value.pair_val.fst == v2.value.pair_val.fst &&
         v1.value.pair_val.snd == v2.value.pair_val.snd);
+    case mel_true:
+    return 1;
     default:
     return 0;
   }
