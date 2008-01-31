@@ -104,7 +104,10 @@ static void print_string( struct mel_value* value ) {
 }
 
 static void print_cfunc( struct mel_value* value ) {
-  printf("#<c-function 0x%x>", (unsigned int)value->value.cfun_val.cfun);
+  static int len = sizeof(void *) * 2;
+  static char fmt[128];
+  sprintf(fmt, "#<c-function 0x%%0%dx>", len);
+  printf(fmt, (unsigned int)value->value.cfun_val.cfun);
 }
 
 static void print_char( struct mel_value* value ) {
