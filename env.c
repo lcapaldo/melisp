@@ -18,6 +18,7 @@ static struct mel_value* eval(struct mel_pool* p, struct mel_value* args);
 static struct mel_value* list(struct mel_pool* p, struct mel_value* args);
 static struct mel_value* id(struct mel_pool* p, struct mel_value* args);
 static struct mel_value* obj_count(struct mel_pool* p, struct mel_value* args);
+static struct mel_value* byte_count(struct mel_pool* p, struct mel_value* args);
 static struct mel_value* print_memory(struct mel_pool* p, struct mel_value* args);
 static struct mel_value* print(struct mel_pool* p, struct mel_value* args);
 static struct mel_value* eq(struct mel_pool* p, struct mel_value* args);
@@ -83,6 +84,7 @@ struct mel_value* mel_standard_env(struct mel_pool* p) {
   mel_set_global(p, mel_cdr(mel_read(p, "=")), mel_alloc_cfun(p, eq));
   disttrue = mel_alloc_disttrue(p);
   mel_set_global(p, mel_cdr(mel_read(p, "true")), disttrue);
+  mel_set_global(p, mel_cdr(mel_read(p, "byte-count")), mel_alloc_cfun(p, byte_count));
 
 
   return p->env; 
@@ -216,6 +218,10 @@ static struct mel_value* id(struct mel_pool* p, struct mel_value* args) {
 
 static struct mel_value* obj_count(struct mel_pool* p, struct mel_value* args) {
   return mel_alloc_int(p, p->obj_count);
+}
+
+static struct mel_value* byte_count(struct mel_pool* p, struct mel_value* args) {
+  return mel_alloc_int(p, p->obj_count * sizeof(struct mel_value));
 }
 
 static struct mel_value* print_memory(struct mel_pool* p, struct mel_value* args) {
