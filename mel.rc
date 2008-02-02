@@ -2,3 +2,8 @@
 (set snd (lambda (lst) (car (cdr lst))))
 (set build-let (lambda (binding body) (list 'lambda (list (car binding)) body))) 
 (set let (lambda (binding body) ((eval (build-let binding body)) (eval (snd binding)) )) )
+(set on-head (lambda (f lst) (f (car lst))))
+(set map (lambda (f lst) (if lst (cons (on-head f lst) (map f (cdr lst))) nil)))
+(set id (lambda (x) x))
+(set string->list (lambda (str) (map id str)))
+(set copy-list string->list)
