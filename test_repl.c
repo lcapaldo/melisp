@@ -23,6 +23,17 @@ int main() {
     fprintf(stderr, "Error initing pool\n");
     exit( 1 );
   }
+  FILE *melrc = fopen("mel.rc", "r");
+
+  while( fgets( input, 1024, melrc ) ) {
+    s = mel_read( &p, input );
+    if( s->value.pair_val.fst->value.int_val.val != mel_noerr ) {
+      printf("parse error in mel.rc\n");
+      break;
+    }
+    mel_eval(&p, s->value.pair_val.snd);
+  } 
+  fclose(melrc);
   signal(SIGBUS, handle_segv);
   signal(SIGBUS, handle_segv);
   setjmp(j);

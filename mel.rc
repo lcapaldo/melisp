@@ -1,0 +1,1 @@
+(set not (lambda (x) (if x nil true)))
