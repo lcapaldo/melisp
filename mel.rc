@@ -1,1 +1,4 @@
 (set not (lambda (x) (if x nil true)))
+(set snd (lambda (lst) (car (cdr lst))))
+(set build-let (lambda (binding body) (list 'lambda (list (car binding)) body))) 
+(set let (lambda (binding body) ((eval (build-let binding body)) (eval (snd binding)) )) )
